@@ -1,0 +1,32 @@
+name: Error Hunt CI/CD
+
+on: 
+  pull_request:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  check-errors:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Check for Correct Answer
+      run: |
+        # Correct answer for problem1
+        correct_answer="for(int j=0;j<=i;j++){"
+        
+        # Check the answer in problem1/error.txt
+        if [ -f "problem1/error.txt" ]; then
+          user_answer=$(cat "problem1/error.txt")
+          if [ "$user_answer" == "$correct_answer" ]; then
+            echo "Correct answer for problem1!"
+          else
+            echo "Incorrect answer for problem1."
+            exit 1  # Fail the CI pipeline for incorrect answers
+          fi
+        else
+          echo "Answer not submitted for problem1."
+          exit 1  # Fail the CI pipeline if no answer is found
+        fi
